@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Focus Quest – A gamified study timer with virtual pets, XP, quests, and streaks. Make studying fun!" />
+  <title>Focus Quest – Gamified Study Timer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app">
+    <!-- ============================================================ -->
+    <!-- TOP NAV BAR                                                  -->
+    <!-- ============================================================ -->
+    <header class="top-bar" id="top-bar">
+      <div class="top-bar-left">
+        <span class="logo-icon">🌟</span>
+        <span class="logo-text">Focus Quest</span>
+      </div>
+      <div class="top-bar-right">
+        <div class="streak-badge" id="header-streak" title="Study Streak">
+          <span class="streak-fire">🔥</span>
+          <span class="streak-count" id="header-streak-count">0</span>
+        </div>
+        <div class="xp-bar-wrap" title="XP Progress">
+          <div class="level-badge" id="header-level">LV 1</div>
+          <div class="xp-track">
+            <div class="xp-fill" id="header-xp-fill" style="width:0%"></div>
+          </div>
+          <span class="xp-label" id="header-xp-label">0 / 200</span>
+        </div>
+        <div class="coin-badge" title="Coins">
+          <span>🪙</span>
+          <span id="header-coins">0</span>
+        </div>
+        <button class="icon-btn" id="settings-btn" aria-label="Settings">⚙️</button>
+      </div>
+    </header>
+
+    <!-- ============================================================ -->
+    <!-- BOTTOM NAV                                                   -->
+    <!-- ============================================================ -->
+    <nav class="bottom-nav" id="bottom-nav" role="navigation" aria-label="Main navigation">
+      <button class="nav-btn active" data-view="dashboard" aria-label="Dashboard">
+        <span class="nav-icon">🏠</span>
+        <span class="nav-label">Home</span>
+      </button>
+      <button class="nav-btn" data-view="stats" aria-label="Statistics">
+        <span class="nav-icon">📊</span>
+        <span class="nav-label">Stats</span>
+      </button>
+      <button class="nav-btn" data-view="history" aria-label="History">
+        <span class="nav-icon">📚</span>
+        <span class="nav-label">History</span>
+      </button>
+      <button class="nav-btn" data-view="collection" aria-label="Collection">
+        <span class="nav-icon">🌸</span>
+        <span class="nav-label">Garden</span>
+      </button>
+      <button class="nav-btn" data-view="settings" aria-label="Settings">
+        <span class="nav-icon">⚙️</span>
+        <span class="nav-label">Settings</span>
+      </button>
+    </nav>
+
+    <!-- ============================================================ -->
+    <!-- VIEWS                                                        -->
+    <!-- ============================================================ -->
+    <main class="main-content" id="main-content">
+
+      <!-- =========================================================== -->
+      <!-- VIEW: DASHBOARD                                              -->
+      <!-- =========================================================== -->
+      <section class="view active" id="view-dashboard">
+        <div class="dashboard-grid">
+
+          <!-- Pet Card -->
+          <div class="card pet-card" id="pet-card">
+            <div class="pet-card-inner">
+              <div class="pet-stage">
+                <div class="pet-aura" id="pet-aura"></div>
+                <div class="pet-emoji" id="pet-emoji">🐱</div>
+                <div class="pet-face" id="pet-face">ฅ^•ﻌ•^ฅ</div>
+              </div>
+              <div class="pet-speech" id="pet-speech">
+                <span id="pet-speech-text">Hey! Ready to study today? 🌟</span>
+              </div>
+              <div class="pet-info">
+                <span class="pet-name" id="pet-name">Luna</span>
+                <span class="pet-level" id="pet-level">Pet Lv.1</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Timer Setup Card -->
+          <div class="card timer-setup-card" id="timer-setup-card">
+            <h2 class="card-title">Start a Focus Session</h2>
+
+            <!-- Category -->
+            <div class="field-group">
+              <label class="field-label" for="category-select">Category</label>
+              <div class="category-grid" id="category-grid">
+                <button class="cat-btn active" data-cat="general" aria-pressed="true">📚 General</button>
+                <button class="cat-btn" data-cat="japanese" aria-pressed="false">🇯🇵 Japanese</button>
+                <button class="cat-btn" data-cat="vocab" aria-pressed="false">🧠 Vocabulary</button>
+                <button class="cat-btn" data-cat="reading" aria-pressed="false">📖 Reading</button>
+                <button class="cat-btn" data-cat="grammar" aria-pressed="false">✍️ Grammar</button>
+                <button class="cat-btn" data-cat="coding" aria-pressed="false">💻 Coding</button>
+                <button class="cat-btn" data-cat="assignment" aria-pressed="false">📝 Assignment</button>
+                <button class="cat-btn" data-cat="other" aria-pressed="false">🎯 Other</button>
+              </div>
+            </div>
+
+            <!-- Goal -->
+            <div class="field-group">
+              <label class="field-label" for="goal-input">What do you want to accomplish?</label>
+              <input
+                type="text"
+                id="goal-input"
+                class="goal-input"
+                placeholder="e.g. Learn 20 N3 vocabulary words…"
+                maxlength="100"
+                autocomplete="off"
+              />
+            </div>
+
+            <!-- Duration -->
+            <div class="field-group">
+              <label class="field-label">Duration</label>
+              <div class="duration-grid" id="duration-grid">
+                <button class="dur-btn" data-min="15" aria-pressed="false">15<span>min</span></button>
+                <button class="dur-btn active" data-min="25" aria-pressed="true">25<span>min</span></button>
+                <button class="dur-btn" data-min="45" aria-pressed="false">45<span>min</span></button>
+                <button class="dur-btn" data-min="60" aria-pressed="false">60<span>min</span></button>
+                <button class="dur-btn custom-dur-btn" data-min="custom" aria-pressed="false">✏️ Custom</button>
+              </div>
+              <div class="custom-dur-wrap collapsed" id="custom-dur-wrap">
+                <div class="fun-number-input">
+                  <button type="button" class="fun-num-btn" id="custom-dur-minus" aria-label="Decrease minutes">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                  </button>
+                  <input type="number" id="custom-dur-input" class="custom-dur-input" min="1" max="240" value="30" />
+                  <button type="button" class="fun-num-btn" id="custom-dur-plus" aria-label="Increase minutes">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                  </button>
+                </div>
+                <span class="custom-dur-unit">minutes</span>
+              </div>
+              <div class="validation-msg hidden" id="dur-validation">⚠️ Please enter a valid duration (1–240 minutes).</div>
+            </div>
+
+            <div class="xp-preview" id="xp-preview">
+              <span>🎯 Complete this session to earn</span>
+              <span class="xp-gain" id="xp-gain-preview">+50 XP</span>
+              <span class="coin-gain" id="coin-gain-preview">+20 🪙</span>
+            </div>
+
+            <button class="start-btn" id="start-btn" aria-label="Start focus session">
+              <span class="start-btn-icon">▶</span> Start Focus
+            </button>
+          </div>
+
+          <!-- Daily Quest Card -->
+          <div class="card quest-card" id="quest-card">
+            <div class="quest-card-header">
+              <h2 class="card-title">🎯 Today's Quests</h2>
+              <span class="quest-progress-label" id="quest-progress-label">0 / 3</span>
+            </div>
+            <div class="quest-progress-bar">
+              <div class="quest-progress-fill" id="quest-progress-fill" style="width:0%"></div>
+            </div>
+            <ul class="quest-list" id="quest-list"></ul>
+          </div>
+
+          <!-- Streak Card -->
+          <div class="card streak-card">
+            <h2 class="card-title">🔥 Study Streak</h2>
+            <div class="streak-display">
+              <span class="streak-number" id="streak-number">0</span>
+              <span class="streak-unit">day streak</span>
+            </div>
+            <div class="week-grid" id="week-grid"></div>
+          </div>
+
+          <!-- Today Stats Card -->
+          <div class="card today-stats-card">
+            <h2 class="card-title">📈 Today's Progress</h2>
+            <div class="today-stats-grid">
+              <div class="today-stat">
+                <span class="today-stat-val" id="today-time">0m</span>
+                <span class="today-stat-lbl">Focus Time</span>
+              </div>
+              <div class="today-stat">
+                <span class="today-stat-val" id="today-sessions">0</span>
+                <span class="today-stat-lbl">Sessions</span>
+              </div>
+              <div class="today-stat">
+                <span class="today-stat-val" id="today-xp">0</span>
+                <span class="today-stat-lbl">XP Earned</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Garden preview -->
+          <div class="card garden-preview-card">
+            <h2 class="card-title">🌱 My Study Garden</h2>
+            <div class="garden-grid" id="garden-grid-preview"></div>
+            <div class="garden-empty hidden" id="garden-empty">
+              <span>🌱</span>
+              <p>Complete sessions to grow your garden!</p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- =========================================================== -->
+      <!-- VIEW: STATISTICS                                             -->
+      <!-- =========================================================== -->
+      <section class="view" id="view-stats">
+        <div class="page-header">
+          <h1>📊 Statistics</h1>
+          <p class="page-sub">Your study analytics at a glance</p>
+        </div>
+        <div class="stats-grid">
+          <div class="card stat-summary-card">
+            <h2 class="card-title">All-time Stats</h2>
+            <div class="all-stats-grid">
+              <div class="all-stat">
+                <span class="all-stat-val" id="stat-total-time">0h 0m</span>
+                <span class="all-stat-lbl">Total Focus Time</span>
+              </div>
+              <div class="all-stat">
+                <span class="all-stat-val" id="stat-total-sessions">0</span>
+                <span class="all-stat-lbl">Sessions</span>
+              </div>
+              <div class="all-stat">
+                <span class="all-stat-val" id="stat-avg-session">0m</span>
+                <span class="all-stat-lbl">Avg Session</span>
+              </div>
+              <div class="all-stat">
+                <span class="all-stat-val" id="stat-total-xp">0</span>
+                <span class="all-stat-lbl">XP Earned</span>
+              </div>
+              <div class="all-stat">
+                <span class="all-stat-val" id="stat-streak">0</span>
+                <span class="all-stat-lbl">Current Streak</span>
+              </div>
+              <div class="all-stat">
+                <span class="all-stat-val" id="stat-longest-streak">0</span>
+                <span class="all-stat-lbl">Longest Streak</span>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <h2 class="card-title">Weekly Focus (minutes)</h2>
+            <div class="bar-chart" id="weekly-chart"></div>
+          </div>
+          <div class="card">
+            <h2 class="card-title">Category Breakdown</h2>
+            <div class="category-chart" id="category-chart"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================== -->
+      <!-- VIEW: HISTORY                                                -->
+      <!-- =========================================================== -->
+      <section class="view" id="view-history">
+        <div class="page-header">
+          <h1>📚 Focus History</h1>
+          <p class="page-sub">All your completed sessions</p>
+        </div>
+        <div id="history-list" class="history-list"></div>
+        <div class="empty-state hidden" id="history-empty">
+          <span class="empty-icon">📚</span>
+          <h3>No sessions yet.</h3>
+          <p>Start your first focus session!</p>
+        </div>
+      </section>
+
+      <!-- =========================================================== -->
+      <!-- VIEW: COLLECTION / GARDEN                                    -->
+      <!-- =========================================================== -->
+      <section class="view" id="view-collection">
+        <div class="page-header">
+          <h1>🌸 Garden & Collection</h1>
+          <p class="page-sub">Watch your study garden grow</p>
+        </div>
+        <div class="collection-grid">
+          <div class="card">
+            <h2 class="card-title">🌱 My Study Garden</h2>
+            <p class="garden-hint">Each completed session plants a flower!</p>
+            <div class="garden-full" id="garden-full"></div>
+            <div class="empty-state hidden" id="garden-full-empty">
+              <span class="empty-icon">🌱</span>
+              <h3>Your garden is empty.</h3>
+              <p>Complete sessions to grow your garden!</p>
+            </div>
+          </div>
+          <div class="card">
+            <h2 class="card-title">🐾 Pets</h2>
+            <div class="pet-roster" id="pet-roster"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================== -->
+      <!-- VIEW: SETTINGS                                               -->
+      <!-- =========================================================== -->
+      <section class="view" id="view-settings">
+        <div class="page-header">
+          <h1>⚙️ Settings</h1>
+          <p class="page-sub">Customize your experience</p>
+        </div>
+        <div class="settings-stack">
+          <div class="card settings-card">
+            <h2 class="card-title">🎵 Sound</h2>
+            <div class="setting-row">
+              <div>
+                <span class="setting-label">🔔 Timer completion sound</span>
+                <span class="setting-note">Plays a chime when focus finishes</span>
+              </div>
+              <button class="toggle-btn" id="sound-complete-btn" aria-label="Timer sound">OFF</button>
+            </div>
+            <div class="setting-row">
+              <div>
+                <span class="setting-label">🔊 Ambient sounds</span>
+                <span class="setting-note">Plays white noise during focus</span>
+              </div>
+              <button class="toggle-btn" id="sound-ambient-btn" aria-label="Ambient sound">OFF</button>
+            </div>
+          </div>
+
+          <div class="card settings-card">
+            <h2 class="card-title">🎨 Appearance</h2>
+            <div class="setting-row">
+              <span class="setting-label">Theme</span>
+              <div class="theme-btns">
+                <button class="theme-btn active" data-theme="dark" id="theme-dark" aria-pressed="true">🌙 Dark</button>
+                <button class="theme-btn" data-theme="light" id="theme-light" aria-pressed="false">☀️ Light</button>
+                <button class="theme-btn" data-theme="aurora" id="theme-aurora" aria-pressed="false">🌌 Aurora</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card settings-card">
+            <h2 class="card-title">🐾 Pet</h2>
+            <div class="pet-select-grid" id="pet-select-grid"></div>
+          </div>
+
+          <div class="card settings-card danger-zone">
+            <h2 class="card-title">⚠️ Data</h2>
+            <div class="setting-row">
+              <span class="setting-label">Reset all progress</span>
+              <button class="danger-btn" id="reset-btn" aria-label="Reset all progress">Reset</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ============================================================ -->
+    <!-- FOCUS MODE OVERLAY                                           -->
+    <!-- ============================================================ -->
+    <div class="focus-overlay hidden" id="focus-overlay" role="dialog" aria-modal="true" aria-label="Focus Mode">
+      <div class="focus-inner">
+        <div class="focus-meta">
+          <span class="focus-category" id="focus-category-label"></span>
+          <span class="focus-goal" id="focus-goal-label"></span>
+        </div>
+
+        <div class="focus-pet-wrap">
+          <div class="focus-pet-emoji" id="focus-pet-emoji">🐱</div>
+          <div class="focus-pet-state" id="focus-pet-state">STAY FOCUSED</div>
+        </div>
+
+        <div class="focus-timer-display" id="focus-timer-display" aria-live="polite" aria-label="Timer">
+          25:00
+        </div>
+
+        <div class="focus-progress-track" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" id="focus-progress-bar-wrap">
+          <div class="focus-progress-fill" id="focus-progress-fill" style="width:0%"></div>
+        </div>
+
+        <div class="focus-controls">
+          <button class="focus-btn pause-btn" id="focus-pause-btn" aria-label="Pause timer">
+            <span id="focus-pause-label">⏸ Pause</span>
+          </button>
+          <button class="focus-btn give-up-btn" id="focus-giveup-btn" aria-label="Give up focus session">
+            ✕ Give Up
+          </button>
+        </div>
+
+        <div class="focus-hint">Press <kbd>Space</kbd> to pause · <kbd>Esc</kbd> to exit</div>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- COMPLETION SCREEN                                            -->
+    <!-- ============================================================ -->
+    <div class="completion-overlay hidden" id="completion-overlay" role="dialog" aria-modal="true" aria-label="Session Complete">
+      <div class="completion-card">
+        <div class="completion-sparkles" aria-hidden="true">
+          <span class="sparkle s1">✨</span>
+          <span class="sparkle s2">⭐</span>
+          <span class="sparkle s3">✨</span>
+          <span class="sparkle s4">⭐</span>
+          <span class="sparkle s5">✨</span>
+        </div>
+        <div class="completion-header">✨ QUEST COMPLETE ✨</div>
+        <div class="completion-pet" id="completion-pet">🐱</div>
+        <div class="completion-pet-face">ฅ^•ﻌ•^ฅ</div>
+        <div class="completion-msg" id="completion-msg">Great job!</div>
+        <div class="completion-detail" id="completion-detail">25 minutes focused</div>
+        <div class="completion-rewards">
+          <div class="reward-chip" id="completion-xp">+50 XP</div>
+          <div class="reward-chip coin-chip" id="completion-coins">+20 🪙</div>
+        </div>
+        <div class="completion-streak hidden" id="completion-streak">🔥 Streak maintained!</div>
+        <div class="completion-quests" id="completion-quests"></div>
+        <button class="start-btn" id="completion-continue-btn" aria-label="Continue to dashboard">
+          Continue →
+        </button>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- LEVEL UP OVERLAY                                             -->
+    <!-- ============================================================ -->
+    <div class="levelup-overlay hidden" id="levelup-overlay" role="dialog" aria-modal="true" aria-label="Level Up">
+      <div class="levelup-card">
+        <div class="levelup-stars" aria-hidden="true">🎉🌟🎉</div>
+        <div class="levelup-title">LEVEL UP!</div>
+        <div class="levelup-sub">You reached Level <span id="levelup-num">2</span>!</div>
+        <div class="levelup-bonus">+100 🪙 bonus!</div>
+        <button class="start-btn" id="levelup-continue-btn" aria-label="Continue">Awesome! 🎉</button>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- GIVE UP CONFIRMATION OVERLAY                                 -->
+    <!-- ============================================================ -->
+    <div class="giveup-overlay hidden" id="giveup-overlay" role="dialog" aria-modal="true" aria-label="Give Up Confirmation">
+      <div class="giveup-card">
+        <div class="giveup-emoji">🥺</div>
+        <h3 class="giveup-title">Are you sure?</h3>
+        <p class="giveup-msg">If you give up now, you won't earn any XP or Coins, and your pet will be sad!</p>
+        <div class="giveup-actions">
+          <button class="giveup-btn-confirm" id="giveup-confirm-btn">Yes, Give Up 😿</button>
+          <button class="giveup-btn-cancel" id="giveup-cancel-btn">No, Keep Focusing! 💪</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- RESET PROGRESS OVERLAY                                       -->
+    <!-- ============================================================ -->
+    <div class="giveup-overlay hidden" id="reset-overlay" role="dialog" aria-modal="true" aria-label="Reset Progress Confirmation">
+      <div class="giveup-card">
+        <div class="giveup-emoji">😱</div>
+        <h3 class="giveup-title">Reset Everything?!</h3>
+        <p class="giveup-msg">Are you sure you want to erase ALL your progress? Your level, coins, and pets will be gone forever. This cannot be undone!</p>
+        <div class="giveup-actions">
+          <button class="giveup-btn-cancel" id="reset-cancel-btn">Phew, Nevermind! 😅</button>
+          <button class="giveup-btn-confirm" id="reset-confirm-btn">Yes, Reset It All 💥</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- TOAST NOTIFICATIONS                                          -->
+    <!-- ============================================================ -->
+    <div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
